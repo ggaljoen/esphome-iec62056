@@ -244,6 +244,8 @@ void IEC62056Component::parse_id_(const char *packet) {
   auto len = strlen(packet);
   meter_identification_.assign(packet);
   baud_rate_identification_ = len >= 5 ? packet[4] : 0 /*set proto A, baud rate=0*/;
+  ESP_LOGD(TAG, "Force mode A");
+  baud_rate_identification_ = 0;
   ESP_LOGVV(TAG, "Baudrate char: '%c'", baud_rate_identification_);
   set_protocol_(baud_rate_identification_);
 }

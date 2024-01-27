@@ -456,7 +456,18 @@ void IEC62056Component::loop() {
       data_out_size_ = sizeof(set_baud);
       memcpy(out_buf_, set_baud, data_out_size_);
       out_buf_[2] = baud_rate_char;
-      send_frame_();
+
+      // test send ACK wait and then send baud rate
+      data_out_size_ = 1;
+      send_frame_(); //just ACK
+
+      // wait 200ms
+      delay(200);
+
+      memmove(out_buf_, out_buf_+1, sizeof(set_baud)-1); //remove ACK
+      data_out_size_ = sizeof(set_baud)-1;
+
+      send_frame_(); // send baud rate
 
       new_baudrate = identification_to_baud_rate_(baud_rate_char);
 
